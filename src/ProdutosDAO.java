@@ -12,35 +12,72 @@ public class ProdutosDAO {
     ResultSet resultset;
     ArrayList<ProdutosDTO> listagem = new ArrayList<>();
     
+    
     public void cadastrarProduto (ProdutosDTO produto){
         
         
-        conn = new conectaDAO().connectDB();
+        conectaDAO dao = new conectaDAO();
+        conn = dao.connectDB();
         
+        // Verifica se conectou
+        if (conn == null) {
+            JOptionPane.showMessageDialog(null, "Erro de Conexão: Não foi possível conectar ao banco.");
+            return;
+        }
         
         String sql = "INSERT INTO produtos (nome, valor, status) VALUES (?, ?, ?)";
         
         try {
-            
             prep = conn.prepareStatement(sql);
             prep.setString(1, produto.getNome());
             prep.setInt(2, produto.getValor());
             prep.setString(3, produto.getStatus());
             
-            
             prep.execute();
             prep.close();
-            
             
             JOptionPane.showMessageDialog(null, "Cadastro realizado com sucesso!");
             
         } catch (SQLException e) {
-            
             JOptionPane.showMessageDialog(null, "Erro ao cadastrar: " + e.getMessage());
         }
     }
     
+    
     public ArrayList<ProdutosDTO> listarProdutos(){
+        
+        String sql = "SELECT * FROM produtos";
+        
+        try {
+            
+            conectaDAO dao = new conectaDAO();
+            conn = dao.connectDB();
+            
+            
+            if (conn == null){
+                return listagem; 
+            }
+            
+            prep = conn.prepareStatement(sql);
+            resultset = prep.executeQuery();
+            
+            
+            listagem = new ArrayList<>();
+            
+            while(resultset.next()){
+                ProdutosDTO p = new ProdutosDTO();
+                p.setId(resultset.getInt("id"));
+                p.setNome(resultset.getString("nome"));
+                p.setValor(resultset.getInt("valor"));
+                p.setStatus(resultset.getString("status"));
+                
+                listagem.add(p);
+            }
+            
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Erro ao listar produtos: " + e.getMessage());
+        }
+        
         return listagem;
     }
 }
