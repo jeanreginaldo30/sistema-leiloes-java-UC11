@@ -1,6 +1,8 @@
 import java.util.ArrayList;
 import javax.swing.table.DefaultTableModel;
 
+
+
 public class vendasVIEW extends javax.swing.JFrame {
 
     public vendasVIEW() {
@@ -135,5 +137,6 @@ public class vendasVIEW extends javax.swing.JFrame {
         } catch (Exception e) {
             
         }
+        
     }
 }
